@@ -8,7 +8,7 @@ urlpatterns = [
     path('upload-rooms/', views.csv_upload, name='upload'),
     path('list-rooms/', views.roomList, name='list-rooms'),
     path('logout/', views.logout, name='logout'),
-    path('stop-room/<str:room>/', views.stopRoom, name='stop-room'),
+    #path('stop-room/<str:room>/', views.stopRoom, name='stop-room'),
     path('paste-room/', views.pasteLink, name='paste-room'),
 
     #Inaccessibles

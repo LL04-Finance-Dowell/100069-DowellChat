@@ -67,7 +67,7 @@
 </div>
 
 <div class="container">
-    {% if role == "Admin" %}
+{#    {% if role == "Admin" %} #}
         <a href="{% url 'enter-room' %}"><button>
             Create Room
         </button></a>
@@ -77,11 +77,11 @@
         <a href="{% url 'list-rooms' %}"><button>
             See All Rooms
         </button></a>
-    {% else %}
+{#    {% else %} #}
         <a href="{% url 'paste-room' %}"><button>
             Enter Room
         </button></a>
-    {% endif %}
+{#    {% endif %} #}
 
 </div>
 

@@ -5,6 +5,7 @@ from .dowellconnection import dowellconnection
 import json, csv
 from django.views.decorators.csrf import csrf_exempt
 from .forms import UploadFileForm
+import time
 #from django.views.generic.base import RedirectView
 #from django.http import HttpResponseRedirect
 
@@ -65,11 +66,15 @@ def room(request, room):
         room_details = Room.objects.get(name=room)
         message = Message.objects.all()
 
+        mems = Room.objects.filter(name=room_details)
+
+
         return render(request, 'room.html', {
             'room': room,
             'room_details': room_details,
             'message': message,
             'username': username,
+            'mems': mems,
         })
     else:
         return redirect("https://100014.pythonanywhere.com/?code=100069")
@@ -78,7 +83,7 @@ def pasteLink(request):
 
     return render(request, 'pastelink.html', {'usr': request.session.get("user_name")})
 
-
+'''
 def stopRoom(request, room):
     message = request.POST['message']
     username = request.POST['username']
@@ -90,7 +95,7 @@ def stopRoom(request, room):
     dlt_roomID =  Message.objects.filter(room=room_id)
     dlt_roomID.delete()
     return HttpResponse('Room Successfully Stopped!')
-
+'''
 
 #Bulk_Cr8
 def csv_upload(request):
@@ -131,12 +136,17 @@ def roomList(request):
 
 
 def checkviewInvite(request):
-    if request.session.get("user_name"):
-        url = request.GET.get('inviteLink')
-        return redirect(url)
+    #room = request.GET.get('inviteLink')
+    #room = request.POST[url[26:]]
+    room = request.POST['room_name']
+    username = request.session.get("user_name")
+        #return redirect(url)
+    if Room.objects.filter(name=room).exists():
+        return redirect('/'+room+'/?username='+username)
     else:
-        return redirect("https://100014.pythonanywhere.com/?code=100069")
-
+        return HttpResponse('STH WENT WRONG')
+    #else:
+        #return redirect("https://100014.pythonanywhere.com/?code=100069")
 
 def checkview(request):
     room = request.POST['room_name']
@@ -144,9 +154,10 @@ def checkview(request):
     #username = request.POST['username']
 
     if Room.objects.filter(name=room).exists():
+
         return redirect('/'+room+'/?username='+username)
     else:
-        new_room = Room.objects.create(name=room)
+        new_room = Room.objects.create(name=room, members=username)
         new_room.save()
         return redirect('/'+room+'/?username='+username)
 

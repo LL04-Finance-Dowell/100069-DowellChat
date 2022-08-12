@@ -4,16 +4,68 @@
     Paste Room Link
 {% endblock title %}
 
+    <script   src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+
 {% block page_header %}
     <h2>Got a Room Invite Link?
     Paste Here to join.</h2>
 {% endblock page_header %}
 
 {% block content %}
-    <form id="post-form" method= "POST" action="checkview-invite">
+
+    <form id="post-form" method="POST" action="checkview-invite">
         {% csrf_token %}
         <label>Paste Room Link</label>
-        <input type="text" name="inviteLink" id="room_name" width="100px" />
-        <input type="submit" value="Join Room">
+        <input type="text" name="inviteLink" id="invite" width="100px"/>
+         {#<input type="hidden" name="room_name" id='getroom' />#}
+         {#<input type="submit" id='subIt' value="Join Room" />#}
     </form>
+
+    {% comment %}
+        <textarea id="inviteLink"></textarea>
+        <button id="getIt">Redirect Page</button>
+    {% endcomment %}
 {% endblock content %}
+
+{% block script-dwn %}
+
+            let it = document.getElementById('subIt');
+            it.addEventListener("mouseup",
+
+                function out(evt) {
+                        evt.preventDefault();
+
+                    let roomy = document.getElementById("invite").value.slice(34);
+                    let input = document.createElement("input");
+                    input.setAttribute('type', 'text');
+                    input.setAttribute('name', 'room_name')
+                    input.setAttribute('value', roomy)
+
+                    //let sub = document.createElement("input");
+                    //sub.setAttribute('type', 'submit');
+                    //sub.setAttribute('value', 'Join Room')
+
+                    let parent = document.getElementById("post-form");
+                    parent.appendChild(input);
+                    //parent.appendChild(sub);
+                    console.log(roomy);
+
+                });
+
+
+{% endblock script-dwn %}
+
+
+{% comment %}
+    {% block script-dwn %}
+            let getLink = document.getElementById('inviteLink').value;
+            let subIt = document.getElementById('getIt');
+            subIt.addEventListener("click", function (evt) {
+                evt.preventDefault();
+                console.log(getLink)
+                window.location(getLink);
+                return false;
+                });
+
+{% endblock script-dwn %}
+{% endcomment %}

@@ -1,5 +1,5 @@
-Superuser- Jude
-password - judejude
+Superuser- 100069
+password - dowellchat
 
 # Super working with Login Function
 @csrf_exempt

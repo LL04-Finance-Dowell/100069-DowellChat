@@ -104,7 +104,12 @@
     <a href="" id='genLink'><button>Invite</button></a>
     <a href="" id='stop_room'><button>Stop</button></a>
     <a href="/logout"><button>Logout</button></a>
-    <div><b>Current Room Users:</b><p id='roomUsers'> </p></div>
+    <div><b>Current Room Users:</b>
+        {% for mem in mems %}
+        <p id='roomUsers'>{{ mem.members }}</p>
+
+        {% endfor %}
+    </div>
 
     <div id="display">
 
@@ -128,14 +133,15 @@
 
             },
             error: function(response){
-                alert('An error occured')
+                //alert('An error occured')
+                console.log('An error occured');
             }
         });
     },1000);
     })
 
     //Show Room users
-
+/*
     function roomUsrs(){
         $.ajax({
             type: 'GET',
@@ -157,13 +163,14 @@
         });
     };
     roomUsrs();
+*/
     </script>
 
     <div class="container">
 
         <form id="post-form">
             {% csrf_token %}
-           <input type="hidden" name="username" id="username" value="{{username}}"/>
+            <input type="hidden" name="username" id="username" value="{{username}}"/>
             <input type="hidden" name="room_id" id="room_id" value="{{room_details.id}}"/>
             <input type="text" name="message" id="message" width="100px" />
             <input type="submit" value="Send">
@@ -209,7 +216,7 @@
             $( "#display" ).append( "Request is Success." );
             });
             ajxReq.error( function ( jqXhr, textStatus, errorMessage ) {
-            $( "#display" ).append( "Request is Fail.");
+            $( "#display" ).append( "Request Failed.");
             });
             });
             });

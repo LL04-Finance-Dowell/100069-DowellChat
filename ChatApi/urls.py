@@ -1,16 +1,17 @@
 from django.urls import path, include
-from rest_framework import routers
+#from rest_framework import routers
 #from .views import UserViewSet
-from .views import room_list, getMessages, sendMssg
-
-#router = routers.DefaultRouter()
-#router.register(r'users', UserViewSet)
+from . import views
 
 urlpatterns = [
 
-    path('rooms/', room_list),
-    path('messages/<str:room>/', getMessages),
-    path('message/send/', sendMssg),
+    path('rooms/', views.room_list),
+    path('messages/<str:room>/', views.getMessages),
+    path('message/send/', views.sendMssg),
+    path('messages/', views.getChats),
+    path('messages/post/', views.postChats, name='postchat'),
+    path('post/postchat', views.post),
+
 
     #path('drf/', include(router.urls)),
     #path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))

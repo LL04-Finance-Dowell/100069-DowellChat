@@ -1,10 +1,9 @@
 import json
 import requests
 import pprint
-import datetime
-
+from datetime import datetime
 def get_event_id():
-    dd=datetime.datetime.now()
+    dd=datetime.now()
     time=dd.strftime("%d:%m:%Y,%H:%M:%S")
     url="https://100003.pythonanywhere.com/event_creation"
 
@@ -38,19 +37,20 @@ def get_event_id():
 
     r=requests.post(url,json=data)
     return r.text
+
 url = "http://100002.pythonanywhere.com/"
 
 payload = json.dumps({
     "cluster": "chat",
     "database": "chat",
-    "collection": "chats",
-    "document": "chats",
-    "team_member_ID": "10006902",
+    "collection": "rooms",
+    "document": "rooms",
+    "team_member_ID": "1091",
     "function_ID": "ABCDE",
     "command": "insert",
     "field": {
         "eventId":get_event_id(),
-        "dummy_field":"dummy_value"
+        "name":"dummy_value"
     },
     "update_field": {
         "order_nos": 21

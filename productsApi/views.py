@@ -1,68 +1,52 @@
 from django.shortcuts import render
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework import viewsets
-from .models import Products
-from .serializers import ProductsSerializer
-from rest_framework import status
+from django.views.decorators.csrf import csrf_exempt
+
+from .population import targeted_population
+from .connection import connection,get_event_id
 
 
-class ProductsViewSet(viewsets.ViewSet):
-    queryset = Products.objects.all()
-    serializer_class = ProductsSerializer
+@csrf_exempt
+@api_view(['GET','POST','PUT','PATCH','DELETE'])
+def products_view(request):
 
-    def list(self, request):
-        products = self.queryset
-        serializer = ProductsSerializer(products, many=True)
-        return Response(serializer.data)
+    if request.method == 'GET':
+        resp = targeted_population("hr_hiring","dowelltraining",["product_name"],"life_time")
+        return Response(resp['normal']['data'][0])
 
-    def create(self, request):
-        serializer = ProductsSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            json_data = serializer.data
-            # print(json_data)
-            name = json_data.get('name', None)
-            message = {
-                'message': f'{name} created successfully',
-                'data': json_data
-            }
-            return Response(message, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    if request.method == 'POST':
+        product_name = request.data['product_name']
+        product_url = request.data['product_url']
+        print(product_name,product_url)
+        command = "insert"
+        eventId = get_event_id()
+        output = connection(command,eventId,product_name,product_url)
 
-    def retrieve(self, request, pk=None):
-        id = pk
-        if id is not None:
-            products = Products.objects.get(id=id)
-            serializer = ProductsSerializer(products)
-            return Response(serializer.data)
-        return Response({'message': 'id is required'}, status=status.HTTP_400_BAD_REQUEST)
-
-    def update(self, request, pk=None):
-        id = pk
-        if id is not None:
-            product = Products.objects.get(id=id)
-            serializer = ProductsSerializer(
-                instance=product, data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                json_data = serializer.data
-                name = json_data.get('name', None)
-                message = {
-                    'message': f'{name} updated successfully',
-                    'data': json_data
-                }
-                return Response(message, status=status.HTTP_201_CREATED)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        return Response({'message': 'id is required'}, status=status.HTTP_400_BAD_REQUEST)
-
-    def destroy(self, request, pk=None):
-        id = pk
-        if id is not None:
-            product = Products.objects.get(id=id)
-            product.delete()
-            message = {
-                'message': 'Product deleted successfully',
-                'data': {}
-            }
-            return Response(message, status=status.HTTP_201_CREATED)
-        return Response({'message': 'id is required'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"New Product Created":output})
+       
+    # if request.method == 'PUT':
+    #     eventId = request.data['eventId']
+    #     product_name = request.data['product_name']
+    #     product_url = request.data['product_url']
+    #     command = "update"
+    #     output = connection(command,eventId,product_name,product_url)
+    #     return Response({"Product Updated":output})
+    
+    # if request.method == 'PATCH':
+    #     eventId = request.data['eventId']
+    #     product_name = request.data['product_name']
+    #     product_url = request.data['product_url']
+    #     command = "update"
+    #     output = connection(command,eventId,product_name,product_url)
+    #     return Response({"Product Updated":output})
+    
+    # if request.method == 'DELETE':
+    #     eventId = request.data['eventId']
+    #     # product_name = request.data['product_name']
+    #     # product_url = request.data['product_url']
+    #     command = "delete"
+    #     output = connection(command,eventId)
+    #     return Response({"Product Deleted":output})
+    
+    

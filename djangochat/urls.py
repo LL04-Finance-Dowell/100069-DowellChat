@@ -8,6 +8,7 @@ urlpatterns = [
     path('', include('chat.urls')),
     path('api/', include('ChatApi.urls')),
     #path('create-room/', include('chat.urls')),
+    path('productsapi/', include('productsApi.urls')),
 
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

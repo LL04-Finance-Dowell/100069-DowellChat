@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'chat',
     'ChatApi',
     'productsApi',
+    'dowellchat',
 
 ]
 
